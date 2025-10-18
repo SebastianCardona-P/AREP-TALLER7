@@ -1,0 +1,25 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://taller7:taller7arep@taller7arep.aaeyky5.mongodb.net/taller7arep?retryWrites=true&w=majority&appName=taller7arep
+
+# AWS Cognito Configuration
+aws:
+  cognito:
+    region: us-east-1
+    userPoolId: us-east-1_TMwsMyku3
+    clientId: 51eds6asfp09f431mjhpa7hhoj
+    clientSecret: u6c4k61asa09hqrak3ajqjr9lqa8041pr43m1pajhs32u1uol3d
+    jwksUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_TMwsMyku3/.well-known/jwks.json
+
+# JWT Configuration
+jwt:
+  issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_TMwsMyku3
+
+# CORS Configuration
+app:
+  cors:
+    allowed-origins: https://taller-7-twitter.s3.us-east-1.amazonaws.com,http://localhost:3000
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreamHub - Social Media Platform</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="main-header">
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <i class="fas fa-stream"></i>
+            <h1>StreamHub</h1>
+          </div>
+          <nav class="main-nav">
+            <button class="nav-btn active" data-section="home">
+              <i class="fas fa-home"></i>
+              <span>Inicio</span>
+            </button>
+            <button class="nav-btn" data-section="streams">
+              <i class="fas fa-list"></i>
+              <span>Streams</span>
+            </button>
+            <button class="nav-btn" data-section="users">
+              <i class="fas fa-users"></i>
+              <span>Usuarios</span>
+            </button>
+            <button class="nav-btn" data-section="my-profile">
+              <i class="fas fa-user"></i>
+              <span>Mi Perfil</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+          <div class="welcome-banner">
+            <div class="banner-content">
+              <h2>Bienvenido a StreamHub</h2>
+              <p>Crea streams, comparte posts y conecta con otros usuarios</p>
+            </div>
+            <div class="banner-stats">
+              <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                  <h3 id="total-users">0</h3>
+                  <p>Usuarios</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-stream"></i>
+                <div class="stat-info">
+                  <h3 id="total-streams">0</h3>
+                  <p>Streams</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-comments"></i>
+                <div class="stat-info">
+                  <h3 id="total-posts">0</h3>
+                  <p>Posts</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-grid">
+            <!-- Recent Streams -->
+            <div class="home-section">
+              <div class="section-header">
+                <h3><i class="fas fa-fire"></i> Streams Recientes</h3>
+              </div>
+              <div id="recent-streams" class="recent-streams-list">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+
+            <!-- Recent Posts -->
+            <div class="home-section">
+              <div class="section-header">
+                <h3><i class="fas fa-comment-dots"></i> Posts Recientes</h3>
+              </div>
+              <div id="recent-posts" class="recent-posts-list">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Streams Section -->
+        <section id="streams" class="content-section">
+          <div class="section-header-main">
+            <h2><i class="fas fa-stream"></i> Gestión de Streams</h2>
+            <button class="btn-primary" onclick="showCreateStreamModal()">
+              <i class="fas fa-plus"></i> Crear Stream
+            </button>
+          </div>
+
+          <div class="filters-bar">
+            <input
+              type="text"
+              id="stream-search"
+              class="search-input"
+              placeholder="Buscar streams..."
+            />
+            <select id="stream-user-filter" class="filter-select">
+              <option value="">Todos los usuarios</option>
+            </select>
+          </div>
+
+          <div id="streams-list" class="streams-grid">
+            <!-- Loaded dynamically -->
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users" class="content-section">
+          <div class="section-header-main">
+            <h2><i class="fas fa-users"></i> Gestión de Usuarios</h2>
+            <button class="btn-primary" onclick="showCreateUserModal()">
+              <i class="fas fa-user-plus"></i> Crear Usuario
+            </button>
+          </div>
+
+          <div class="filters-bar">
+            <input
+              type="text"
+              id="user-search"
+              class="search-input"
+              placeholder="Buscar usuarios..."
+            />
+          </div>
+
+          <div id="users-list" class="users-grid">
+            <!-- Loaded dynamically -->
+          </div>
+        </section>
+
+        <!-- My Profile Section -->
+        <section id="my-profile" class="content-section">
+          <div class="section-header-main">
+            <h2><i class="fas fa-user-circle"></i> Mi Perfil</h2>
+          </div>
+
+          <div class="profile-selector">
+            <label for="current-user-select">Seleccionar Usuario:</label>
+            <select
+              id="current-user-select"
+              class="filter-select"
+              onchange="loadUserProfile()"
+            >
+              <option value="">-- Selecciona un usuario --</option>
+            </select>
+          </div>
+
+          <div id="profile-content" class="profile-content">
+            <p class="empty-state">Selecciona un usuario para ver su perfil</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Modal: Create User -->
+    <div id="createUserModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-user-plus"></i> Crear Nuevo Usuario</h3>
+          <button class="close-modal" onclick="closeModal('createUserModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="createUserForm">
+            <div class="form-group">
+              <label for="username">Nombre de Usuario *</label>
+              <input type="text" id="username" required maxlength="50" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="fullName">Nombre Completo</label>
+              <input type="text" id="fullName" maxlength="100" />
+            </div>
+            <div class="form-group">
+              <label for="bio">Biografía</label>
+              <textarea id="bio" rows="3" maxlength="200"></textarea>
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn-secondary"
+                onclick="closeModal('createUserModal')"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn-primary">
+                <i class="fas fa-check"></i> Crear Usuario
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Create Stream -->
+    <div id="createStreamModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle"></i> Crear Nuevo Stream</h3>
+          <button class="close-modal" onclick="closeModal('createStreamModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="createStreamForm">
+            <div class="form-group">
+              <label for="stream-creator">Creador *</label>
+              <select id="stream-creator" required class="filter-select">
+                <option value="">-- Selecciona un usuario --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="stream-title">Título *</label>
+              <input type="text" id="stream-title" required maxlength="100" />
+            </div>
+            <div class="form-group">
+              <label for="stream-description">Descripción</label>
+              <textarea
+                id="stream-description"
+                rows="3"
+                maxlength="500"
+              ></textarea>
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn-secondary"
+                onclick="closeModal('createStreamModal')"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn-primary">
+                <i class="fas fa-check"></i> Crear Stream
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Create Post -->
+    <div id="createPostModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-comment-medical"></i> Crear Nuevo Post</h3>
+          <button class="close-modal" onclick="closeModal('createPostModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="createPostForm">
+            <div class="form-group">
+              <label for="post-user">Usuario *</label>
+              <select id="post-user" required class="filter-select">
+                <option value="">-- Selecciona un usuario --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="post-stream">Stream *</label>
+              <select id="post-stream" required class="filter-select">
+                <option value="">-- Selecciona un stream --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="post-content"
+                >Contenido * (máx. 140 caracteres)</label
+              >
+              <textarea
+                id="post-content"
+                required
+                maxlength="140"
+                rows="4"
+              ></textarea>
+              <div class="char-counter"><span id="char-count">0</span>/140</div>
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn-secondary"
+                onclick="closeModal('createPostModal')"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn-primary">
+                <i class="fas fa-paper-plane"></i> Publicar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Stream Detail -->
+    <div id="streamDetailModal" class="modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3 id="stream-detail-title">
+            <i class="fas fa-stream"></i> Detalle del Stream
+          </h3>
+          <button class="close-modal" onclick="closeModal('streamDetailModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="stream-detail-content">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

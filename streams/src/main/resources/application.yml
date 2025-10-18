@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://taller7:taller7arep@taller7arep.aaeyky5.mongodb.net/taller7arep?retryWrites=true&w=majority&appName=taller7arep
+
+# AWS Cognito Configuration
+aws:
+  cognito:
+    region: us-east-1
+    userPoolId: us-east-1_TMwsMyku3
+    jwksUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_TMwsMyku3/.well-known/jwks.json

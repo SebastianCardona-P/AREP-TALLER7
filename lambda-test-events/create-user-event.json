@@ -1,0 +1,32 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /api/users",
+  "rawPath": "/api/users",
+  "rawQueryString": "",
+  "headers": {
+    "accept": "application/json",
+    "authorization": "Bearer TU_JWT_TOKEN_AQUI",
+    "content-type": "application/json",
+    "user-agent": "Mozilla/5.0"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "api-id",
+    "domainName": "test.execute-api.us-east-1.amazonaws.com",
+    "domainPrefix": "test",
+    "http": {
+      "method": "POST",
+      "path": "/api/users",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "Mozilla/5.0"
+    },
+    "requestId": "test-request-id",
+    "routeKey": "POST /api/users",
+    "stage": "$default",
+    "time": "17/Oct/2025:23:23:04 +0000",
+    "timeEpoch": 1729208584000
+  },
+  "body": "{\"username\":\"test_user\",\"email\":\"test@example.com\",\"fullName\":\"Test User\"}",
+  "isBase64Encoded": false
+}

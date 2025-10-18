@@ -1,0 +1,31 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /api/auth/login",
+  "rawPath": "/api/auth/login",
+  "rawQueryString": "",
+  "headers": {
+    "accept": "application/json",
+    "content-type": "application/json",
+    "user-agent": "Mozilla/5.0"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "api-id",
+    "domainName": "test.execute-api.us-east-1.amazonaws.com",
+    "domainPrefix": "test",
+    "http": {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "Mozilla/5.0"
+    },
+    "requestId": "test-request-id",
+    "routeKey": "POST /api/auth/login",
+    "stage": "$default",
+    "time": "17/Oct/2025:23:23:04 +0000",
+    "timeEpoch": 1729208584000
+  },
+  "body": "{\"username\":\"sebas\",\"password\":\"Godmy21*\"}",
+  "isBase64Encoded": false
+}

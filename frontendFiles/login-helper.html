@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JWT Login Helper - Twitter Clone</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .status {
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .status.authenticated {
+        background: #d4edda;
+        color: #155724;
+        border: 2px solid #c3e6cb;
+      }
+
+      .status.not-authenticated {
+        background: #f8d7da;
+        color: #721c24;
+        border: 2px solid #f5c6cb;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+        margin-bottom: 10px;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .token-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        word-break: break-all;
+      }
+
+      .token-info h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .token-info p {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .message.success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .message.error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .divider {
+        margin: 20px 0;
+        text-align: center;
+        position: relative;
+        color: #999;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 45%;
+        height: 1px;
+        background: #ddd;
+      }
+
+      .divider::before {
+        left: 0;
+      }
+
+      .divider::after {
+        right: 0;
+      }
+
+      .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 5px;
+      }
+
+      .info-box h4 {
+        color: #2196f3;
+        margin-bottom: 8px;
+      }
+
+      .info-box p {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .copy-btn {
+        background: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 10px;
+      }
+
+      .copy-btn:hover {
+        background: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 JWT Login Helper</h1>
+      <p class="subtitle">Twitter Clone - Autenticación</p>
+
+      <div id="status" class="status not-authenticated">❌ No autenticado</div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input
+            type="text"
+            id="username"
+            value="testuser"
+            required
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value="Password123!"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          🔑 Iniciar Sesión
+        </button>
+      </form>
+
+      <div class="divider">O</div>
+
+      <button class="btn btn-secondary" onclick="testToken()">
+        🧪 Probar Token Actual
+      </button>
+
+      <button
+        class="btn btn-danger"
+        onclick="logout()"
+        style="margin-top: 10px"
+      >
+        🚪 Cerrar Sesión
+      </button>
+
+      <div id="message"></div>
+
+      <div id="tokenInfo" class="token-info" style="display: none">
+        <h3>✅ Token Guardado</h3>
+        <p id="tokenText"></p>
+        <button class="copy-btn" onclick="copyToken()">📋 Copiar Token</button>
+      </div>
+
+      <div class="info-box">
+        <h4>ℹ️ Información</h4>
+        <p>
+          Este helper te permite obtener un JWT token de AWS Cognito y guardarlo
+          en localStorage. Una vez guardado, el frontend enviará automáticamente
+          el token en todas las peticiones.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE =
+        "https://4dk4r5wro9.execute-api.us-east-1.amazonaws.com/beta/api";
+
+      // Check authentication status on load
+      window.addEventListener("DOMContentLoaded", () => {
+        updateStatus();
+        checkToken();
+      });
+
+      // Update authentication status
+      function updateStatus() {
+        const token = localStorage.getItem("idToken");
+        const statusDiv = document.getElementById("status");
+
+        if (token) {
+          statusDiv.className = "status authenticated";
+          statusDiv.textContent = "✅ Autenticado";
+        } else {
+          statusDiv.className = "status not-authenticated";
+          statusDiv.textContent = "❌ No autenticado";
+        }
+      }
+
+      // Check if token exists and show it
+      function checkToken() {
+        const token = localStorage.getItem("idToken");
+        const tokenInfo = document.getElementById("tokenInfo");
+        const tokenText = document.getElementById("tokenText");
+
+        if (token) {
+          tokenInfo.style.display = "block";
+          tokenText.textContent = token.substring(0, 50) + "...";
+        } else {
+          tokenInfo.style.display = "none";
+        }
+      }
+
+      // Login form handler
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const loginBtn = document.getElementById("loginBtn");
+          const messageDiv = document.getElementById("message");
+
+          loginBtn.disabled = true;
+          loginBtn.textContent = "⏳ Iniciando sesión...";
+          messageDiv.innerHTML = "";
+
+          try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Login falló: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Save tokens
+            localStorage.setItem("idToken", data.idToken);
+            localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("refreshToken", data.refreshToken);
+
+            // Show success message
+            messageDiv.innerHTML = `
+                    <div class="message success">
+                        ✅ Login exitoso!<br>
+                        Usuario: ${data.username}<br>
+                        Email: ${data.email || "N/A"}<br>
+                        Token guardado en localStorage
+                    </div>
+                `;
+
+            // Update UI
+            updateStatus();
+            checkToken();
+
+            // Offer to open main app
+            setTimeout(() => {
+              if (confirm("¿Deseas abrir la aplicación principal?")) {
+                window.location.href = "index.html";
+              }
+            }, 1000);
+          } catch (error) {
+            messageDiv.innerHTML = `
+                    <div class="message error">
+                        ❌ Error: ${error.message}<br>
+                        Verifica tus credenciales y que el servidor esté corriendo.
+                    </div>
+                `;
+            console.error("Login error:", error);
+          } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = "🔑 Iniciar Sesión";
+          }
+        });
+
+      // Test current token
+      async function testToken() {
+        const token = localStorage.getItem("idToken");
+        const messageDiv = document.getElementById("message");
+
+        if (!token) {
+          messageDiv.innerHTML = `
+                    <div class="message error">
+                        ❌ No hay token guardado. Por favor, inicia sesión primero.
+                    </div>
+                `;
+          return;
+        }
+
+        messageDiv.innerHTML =
+          '<div class="message">⏳ Probando token...</div>';
+
+        try {
+          // Test Users API
+          const usersResponse = await fetch(`${API_BASE}/users`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!usersResponse.ok) {
+            throw new Error(`API error: ${usersResponse.status}`);
+          }
+
+          const users = await usersResponse.json();
+
+          messageDiv.innerHTML = `
+                    <div class="message success">
+                        ✅ Token válido!<br>
+                        Se obtuvieron ${users.length} usuarios correctamente.
+                    </div>
+                `;
+        } catch (error) {
+          messageDiv.innerHTML = `
+                    <div class="message error">
+                        ❌ Token inválido o expirado: ${error.message}<br>
+                        Por favor, inicia sesión de nuevo.
+                    </div>
+                `;
+
+          // Clear invalid token
+          localStorage.removeItem("idToken");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          updateStatus();
+          checkToken();
+        }
+      }
+
+      // Logout
+      function logout() {
+        localStorage.removeItem("idToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        document.getElementById("message").innerHTML = `
+                <div class="message success">
+                    ✅ Sesión cerrada correctamente
+                </div>
+            `;
+
+        updateStatus();
+        checkToken();
+      }
+
+      // Copy token to clipboard
+      function copyToken() {
+        const token = localStorage.getItem("idToken");
+        navigator.clipboard
+          .writeText(token)
+          .then(() => {
+            alert("✅ Token copiado al portapapeles!");
+          })
+          .catch((err) => {
+            console.error("Error al copiar:", err);
+            alert("❌ Error al copiar token");
+          });
+      }
+    </script>
+  </body>
+</html>
